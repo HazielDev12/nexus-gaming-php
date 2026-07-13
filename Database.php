@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 
 function getConnection(): PDO{
-    $dsn = "mysql:host=localhost;dbname=nexus_gaming;charset=utf8mb4;port=3306";
+    $dsn = "mysql:host=localhost;dbname=nexus_gaming_php;charset=utf8mb4;port=3306";
     $username = "root";
     $password = "";
     return new PDO($dsn, $username, $password,

@@ -112,7 +112,6 @@ try{
         );
 
     }
-
 }catch(PDOException $e){
     respondError(500, "Error de conexión " . $e->getMessage());
 } catch (Exception $exception) {
