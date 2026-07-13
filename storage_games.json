@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "Minecraft",
+        "price": 600,
+        "status": "available"
+    },
+    {
+        "id": 2,
+        "name": "EA Sports FC 26",
+        "price": 250,
+        "status": "available"
+    }
+]

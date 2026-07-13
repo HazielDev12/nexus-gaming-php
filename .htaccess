@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Si la petición es a un archivo o directorio que existe lo mostramos directamente
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Realizamos el enrutamiento para todas las peticiones
+RewriteRule ^ Index.php [L,QSA]
