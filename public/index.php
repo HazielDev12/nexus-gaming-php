@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Config\Database;
 use App\Repositories\GameRepository;
 use App\Core\Router;
+use App\Helpers\GameHelper;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -13,6 +14,8 @@ header("Content-type: application/json; charset=utf-8"); //Establecer que será 
 try{
     $pdo = Database::getConnection();
     $gameRepository = new GameRepository($pdo);
+    $gameHelper = new GameHelper();
+
 
 //Obtener la operación (GET,POST,PUT,PATCH,DELETE).
     $method = $_SERVER["REQUEST_METHOD"] ?? "GET";
@@ -78,8 +81,8 @@ try{
             respondJson(422, ["errors" => $errors]);
         }
 
-        $merged = mergedGameData($existing, $payload);
-        updateGame($pdo, $resourceId, $merged);
+        $merged = $gameHelper->mergedGameData($existing, $payload);
+        $gameRepository->updateGame($resourceId, $merged);
         $updated = $gameRepository->getGameById($existing["id"]);
         respondJson(
             200,
