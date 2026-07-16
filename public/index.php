@@ -12,6 +12,11 @@ use App\Validators\GameValidator;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Cargar las variables de entorno desde la raíz del proyecto
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->safeLoad(); // safeLoad evita que la app truene si no encuentra el .env
+
+
 header("Content-type: application/json; charset=utf-8"); //Establecer que será JSON
 
     $response = new Response();
