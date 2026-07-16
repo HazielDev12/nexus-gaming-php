@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 use App\Config\Database;
-use App\src\Core\Router;
+use App\Repositories\GameRepository;
+use App\Core\Router;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -11,6 +12,7 @@ header("Content-type: application/json; charset=utf-8"); //Establecer que será 
 
 try{
     $pdo = Database::getConnection();
+    $gameRepository = new GameRepository($pdo);
 
 //Obtener la operación (GET,POST,PUT,PATCH,DELETE).
     $method = $_SERVER["REQUEST_METHOD"] ?? "GET";
@@ -26,7 +28,8 @@ try{
     }
 
     if ($method === "GET" && $resourceId === null) {
-        $games = getAllGames($pdo);
+        $games = $gameRepository->getAllGames();
+        //$games = getAllGames($pdo); //Forma estática
         respondJson(200, $games);
     }
 
@@ -34,7 +37,7 @@ try{
         if($resourceId <= 0){
             respondError(400, "El id debe ser un número válido");
         }
-        $game = getGameById($pdo, $resourceId);
+        $game = $gameRepository->getGameById($resourceId);
         if ($game === null) {
             respondError(404, "Juego no encontrado");
         }
@@ -47,8 +50,8 @@ try{
         if (count($errors) > 0) {
             respondJson(422, ["errors" => $errors]); //422 Porque el json es correcto pero los datos no
         }
-        $newId = createGame($pdo, $payload);
-        $newGame = getGameById($pdo, $newId);
+        $newId = $gameRepository->createGame($payload);
+        $newGame = $gameRepository->getGameById($newId);
         respondJson(
             201,
             [
@@ -63,7 +66,7 @@ try{
         if($resourceId <= 0){
             respondError(400, "El id debe ser un número válido");
         }
-        $existing = getGameById($pdo, $resourceId);
+        $existing = $gameRepository->getGameById($resourceId);
         if ($existing === null) {
             respondError(404, "Juego no encontrado");
         }
@@ -77,7 +80,7 @@ try{
 
         $merged = mergedGameData($existing, $payload);
         updateGame($pdo, $resourceId, $merged);
-        $updated = getGameById($pdo, $existing["id"]);
+        $updated = $gameRepository->getGameById($existing["id"]);
         respondJson(
             200,
             [
@@ -92,12 +95,12 @@ try{
         if($resourceId <= 0){
             respondError(400, "El id debe ser un número válido");
         }
-        $existing = getGameById($pdo, $resourceId);
+        $existing = $gameRepository->getGameById($resourceId);
         if ($existing === null) {
             respondError(404, "Juego no encontrado");
         }
 
-        $deleted = deleteGame($pdo, $resourceId);
+        $deleted = $gameRepository->deleteGame($resourceId);
 
         if (!$deleted) {
             respondError(409, "No se pudo eliminar el juego");
