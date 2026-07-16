@@ -36,7 +36,7 @@ try{
     if ($method === "GET" && $resourceId === null) {
         $games = $gameRepository->getAllGames();
         //$games = getAllGames($pdo); //Forma estática
-        respondJson(200, $games);
+        $response->respondJson(200, $games);
     }
 
     if ($method === "GET" && $resourceId !== null) {
@@ -47,18 +47,18 @@ try{
         if ($game === null) {
             $response->respondError(404, "Juego no encontrado");
         }
-        respondJson(200, $game);
+        $response->respondJson(200, $game);
     }
 
     if ($method === "POST" && $resourceId === null) {
         $payload = $readJsonBody->readJsonBody();
         $errors = validateProductPayload($payload, isCreate: true);
         if (count($errors) > 0) {
-            respondJson(422, ["errors" => $errors]); //422 Porque el json es correcto pero los datos no
+            $response->respondJson(422, ["errors" => $errors]); //422 Porque el json es correcto pero los datos no
         }
         $newId = $gameRepository->createGame($payload);
         $newGame = $gameRepository->getGameById($newId);
-        respondJson(
+        $response->respondJson(
             201,
             [
                 "message" => "Producto creado correctamente",
@@ -81,13 +81,13 @@ try{
         $requireFields = ($method === "PUT");
         $errors = validateProductPayload($payload, $isCreate, $requireFields);
         if (count($errors) > 0) {
-            respondJson(422, ["errors" => $errors]);
+            $response->respondJson(422, ["errors" => $errors]);
         }
 
         $merged = $gameHelper->mergedGameData($existing, $payload);
         $gameRepository->updateGame($resourceId, $merged);
         $updated = $gameRepository->getGameById($existing["id"]);
-        respondJson(
+        $response->respondJson(
             200,
             [
                 "message" => "Juego actualizado correctamente",
@@ -111,7 +111,7 @@ try{
         if (!$deleted) {
             $response->respondError(409, "No se pudo eliminar el juego");
         }
-        respondJson(
+        $response->respondJson(
             200,
             [
                 "message" => "Juego eliminado correctamente",
