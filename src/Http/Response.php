@@ -14,7 +14,7 @@ function respondJson(int $statusCode, $payload): void{
 
 #[NoReturn]
 function respondError(int $statusCode, string $message): void{
-    respondJson($statusCode, ["error"=>$message]);
+    $this->respondJson($statusCode, ["error"=>$message]);
 }
 
 }
