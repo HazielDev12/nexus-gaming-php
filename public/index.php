@@ -5,16 +5,20 @@ declare(strict_types=1);
 use App\Config\Database;
 use App\Core\Router;
 use App\Helpers\GameHelper;
+use App\Http\Request;
+use App\Http\Response;
 use App\Repositories\GameRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 header("Content-type: application/json; charset=utf-8"); //Establecer que será JSON
 
+    $response = new Response();
 try{
     $pdo = Database::getConnection();
     $gameRepository = new GameRepository($pdo);
     $gameHelper = new GameHelper();
+    $readJsonBody = new Request();
 
 
 //Obtener la operación (GET,POST,PUT,PATCH,DELETE).
@@ -27,7 +31,7 @@ try{
 
     //Validación para la url
     if ($resource !== "games") {
-        respondError(404, "Recurso no encontrado. Usa /games");
+        $response->respondError(404, "Recurso no encontrado. Usa /games");
     }
 
     if ($method === "GET" && $resourceId === null) {
@@ -38,17 +42,17 @@ try{
 
     if ($method === "GET" && $resourceId !== null) {
         if($resourceId <= 0){
-            respondError(400, "El id debe ser un número válido");
+            $response->respondError(400, "El id debe ser un número válido");
         }
         $game = $gameRepository->getGameById($resourceId);
         if ($game === null) {
-            respondError(404, "Juego no encontrado");
+            $response->respondError(404, "Juego no encontrado");
         }
         respondJson(200, $game);
     }
 
     if ($method === "POST" && $resourceId === null) {
-        $payload = readJsonBody();
+        $payload = $readJsonBody->readJsonBody();
         $errors = validateProductPayload($payload, isCreate: true);
         if (count($errors) > 0) {
             respondJson(422, ["errors" => $errors]); //422 Porque el json es correcto pero los datos no
@@ -67,13 +71,13 @@ try{
 
     if (($method === "PUT" || $method === "PATCH") && $resourceId !== null) {
         if($resourceId <= 0){
-            respondError(400, "El id debe ser un número válido");
+            $response->respondError(400, "El id debe ser un número válido");
         }
         $existing = $gameRepository->getGameById($resourceId);
         if ($existing === null) {
-            respondError(404, "Juego no encontrado");
+            $response->respondError(404, "Juego no encontrado");
         }
-        $payload = readJsonBody();
+        $payload = $readJsonBody->readJsonBody();
         $isCreate = false;
         $requireFields = ($method === "PUT");
         $errors = validateProductPayload($payload, $isCreate, $requireFields);
@@ -96,17 +100,17 @@ try{
     //DELETE
     if ($method === "DELETE" && $resourceId !== null) {
         if($resourceId <= 0){
-            respondError(400, "El id debe ser un número válido");
+            $response->respondError(400, "El id debe ser un número válido");
         }
         $existing = $gameRepository->getGameById($resourceId);
         if ($existing === null) {
-            respondError(404, "Juego no encontrado");
+            $response->respondError(404, "Juego no encontrado");
         }
 
         $deleted = $gameRepository->deleteGame($resourceId);
 
         if (!$deleted) {
-            respondError(409, "No se pudo eliminar el juego");
+            $response->respondError(409, "No se pudo eliminar el juego");
         }
         respondJson(
             200,
@@ -118,7 +122,7 @@ try{
 
     }
 }catch(PDOException $e){
-    respondError(500, "Error de conexión " . $e->getMessage());
+    $response->respondError(500, "Error de conexión " . $e->getMessage());
 } catch (Exception $exception) {
-    respondError(500, "Error interno " . $exception->getMessage());
+    $response->respondError(500, "Error interno " . $exception->getMessage());
 }
