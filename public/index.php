@@ -7,7 +7,7 @@ use App\Helpers\GameHelper;
 use App\Http\Request;
 use App\Http\Response;
 use App\Repositories\GameRepository;
-use App\config\Database;
+use App\Config\Database;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
