@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Config;
+namespace App\config;
 
 use PDO;
+
 class Database{
 public static function getConnection(): PDO{
     $dsn = "mysql:host=localhost;dbname=nexus_gaming_php;charset=utf8mb4";

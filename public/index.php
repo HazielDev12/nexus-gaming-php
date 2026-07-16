@@ -2,24 +2,23 @@
 
 declare(strict_types=1);
 
-use App\Config\Database;
 use App\Core\Router;
 use App\Helpers\GameHelper;
 use App\Http\Request;
 use App\Http\Response;
 use App\Repositories\GameRepository;
+use App\config\Database;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 header("Content-type: application/json; charset=utf-8"); //Establecer que será JSON
 
-    $response = new Response();
 try{
     $pdo = Database::getConnection();
     $gameRepository = new GameRepository($pdo);
     $gameHelper = new GameHelper();
     $readJsonBody = new Request();
-
+    $response = new Response();
 
 //Obtener la operación (GET,POST,PUT,PATCH,DELETE).
     $method = $_SERVER["REQUEST_METHOD"] ?? "GET";
