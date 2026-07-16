@@ -1,8 +1,6 @@
 <?php
 
-
-namespace App\Helpers;
-
+namespace App\src\Http\Response;
 
 class Response{
 
