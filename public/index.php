@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 use JetBrains\PhpStorm\NoReturn;
 
-require_once "Database.php";
-require_once "GameRepository.php";
-require_once "Helpers.php";
+require_once "../config/Database.php";
+require_once "../src/Repositories/GameRepository.php";
+require_once "../src/Helpers/Helpers.php";
 
 header("Content-type: application/json; charset=utf-8"); //Establecer que será JSON
 
