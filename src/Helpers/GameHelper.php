@@ -1,6 +1,6 @@
 <?php
 
-namespace App\src\Helpers;
+namespace App\Helpers;
 
 class GameHelper{
     function mergedGameData(array $existing, array $payload): array{
