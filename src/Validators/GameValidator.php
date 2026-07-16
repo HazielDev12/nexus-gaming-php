@@ -1,6 +1,6 @@
 <?php
 
-namespace App\src\Validators;
+namespace App\Validators;
 
 class GameValidator{
 

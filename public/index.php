@@ -8,17 +8,19 @@ use App\Http\Request;
 use App\Http\Response;
 use App\Repositories\GameRepository;
 use App\Config\Database;
+use App\Validators\GameValidator;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 header("Content-type: application/json; charset=utf-8"); //Establecer que será JSON
 
+    $response = new Response();
+    $gameHelper = new GameHelper();
+    $readJsonBody = new Request();
+    $gameValidator = new GameValidator();
 try{
     $pdo = Database::getConnection();
     $gameRepository = new GameRepository($pdo);
-    $gameHelper = new GameHelper();
-    $readJsonBody = new Request();
-    $response = new Response();
 
 //Obtener la operación (GET,POST,PUT,PATCH,DELETE).
     $method = $_SERVER["REQUEST_METHOD"] ?? "GET";
@@ -52,7 +54,7 @@ try{
 
     if ($method === "POST" && $resourceId === null) {
         $payload = $readJsonBody->readJsonBody();
-        $errors = validateProductPayload($payload, isCreate: true);
+        $errors = $gameValidator->validateProductPayload($payload, isCreate: true);
         if (count($errors) > 0) {
             $response->respondJson(422, ["errors" => $errors]); //422 Porque el json es correcto pero los datos no
         }
@@ -79,7 +81,7 @@ try{
         $payload = $readJsonBody->readJsonBody();
         $isCreate = false;
         $requireFields = ($method === "PUT");
-        $errors = validateProductPayload($payload, $isCreate, $requireFields);
+        $errors = $gameValidator->validateProductPayload($payload, $isCreate, $requireFields);
         if (count($errors) > 0) {
             $response->respondJson(422, ["errors" => $errors]);
         }
