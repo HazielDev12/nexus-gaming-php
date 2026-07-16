@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\src\Core;
+namespace App\Core;
 
 class Router{
     public static function resolveRoute(array $segments): array{
