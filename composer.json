@@ -1,0 +1,18 @@
+{
+    "name": "haziel/nexus-gaming-php",
+    "description": "Videogame Marketplace built with PHP",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Haziel\\NexusGamingPhp\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Haziel Sanchez"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
