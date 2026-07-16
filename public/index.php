@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-use JetBrains\PhpStorm\NoReturn;
+use App\Config\Database;
+use App\src\Core\Router;
 
-require_once __DIR__ . "/../config/Database.php";
-require_once __DIR__ . "/../src/Repositories/GameRepository.php";
-require_once __DIR__ . "/../src/Helpers/Helpers.php";
+require_once __DIR__ . '/../vendor/autoload.php';
 
 header("Content-type: application/json; charset=utf-8"); //Establecer que será JSON
 
 try{
-    $pdo = getConnection();
+    $pdo = Database::getConnection();
 
 //Obtener la operación (GET,POST,PUT,PATCH,DELETE).
     $method = $_SERVER["REQUEST_METHOD"] ?? "GET";
@@ -19,7 +18,7 @@ try{
     $segments = array_values(array_filter(explode("/", trim($uriPath, "/"))));
 
     //echo "Conexión exitosa";
-    [$resource, $resourceId] = resolveRoute($segments);  //["games", 2], ["games", null], [null, null]
+    [$resource, $resourceId] = Router::resolveRoute($segments);  //["games", 2], ["games", null], [null, null]
 
     //Validación para la url
     if ($resource !== "games") {
