@@ -1,6 +1,6 @@
 <?php
 
-namespace App\src\Http;
+namespace App\Http;
 
 class Response{
 //Devolver errores de forma mas "elegante"

@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use App\Config\Database;
-use App\Repositories\GameRepository;
 use App\Core\Router;
 use App\Helpers\GameHelper;
+use App\Repositories\GameRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
